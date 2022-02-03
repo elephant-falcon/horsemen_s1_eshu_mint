@@ -57,9 +57,18 @@ export const connect = () => {
         const accounts = await ethereum.request({
           method: "eth_requestAccounts",
         });
-        const networkId = await ethereum.request({
+        let networkId = await ethereum.request({
           method: "net_version",
         });
+        if (networkId != CONFIG.NETWORK.ID) {
+          await ethereum.request({
+            method: "wallet_switchEthereumChain",
+            params: [{ chainId: CONFIG.NETWORK.CHAINID }],
+          });
+          networkId = await ethereum.request({
+            method: "net_version",
+          });
+        }
         if (networkId == CONFIG.NETWORK.ID) {
           const SmartContractObj = new Web3EthContract(
             abi,
@@ -76,12 +85,7 @@ export const connect = () => {
           ethereum.on("accountsChanged", (accounts) => {
             dispatch(updateAccount(accounts[0]));
           });
-          ethereum.on("chainChanged", () => {
-            window.location.reload();
-          });
           // Add listeners end
-        } else {
-          dispatch(connectFailed(`Change network to ${CONFIG.NETWORK.NAME}.`));
         }
       } catch (err) {
         dispatch(connectFailed("Something went wrong."));

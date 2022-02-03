@@ -4,7 +4,8 @@
   "NETWORK": {
     "NAME": "Polygon",
     "SYMBOL": "MATIC",
-    "ID": 80001
+    "ID": 80001,
+    "CHAINID": "0x13881"
   },
   "NFT_NAME": "OYA THE CATALYST",
   "SYMBOL": "OYA",
